@@ -166,3 +166,44 @@ Verified SSH and MySQL connectivity
 Practiced real-world troubleshooting skills: KVM conflicts, network setup, MySQL auth, client installation
 
 Built a mini cloud lab environment suitable for future exercises like connecting Nginx → MySQL or simulating AWS EC2 + RDS
+
+
+
+
+#1Jan2026
+
+Want to do:
+be able to login into this pc using ssh from anywhere in the world
+
+Option
+1. Port fowarding +SSH
+2. Public IP +firewall
+3. VPN (Wireguard/OpenVPN)
+4. Tailscale /ZeroTier
+5. EC2 Bastion (Jump Host)
+
+Easiest :
+Option 4
+
+Best :
+Option 3
+
+Cloud-style option
+Option 5
+
+Going with option 3
+--------------------------------------
+
+VPN(Wireguard) - Self Hosted
+Why is it best option?
+- Full control
+- Enterprise security
+- Scales to multiple devices
+- Same concept as AWS  VPCs
+
+Setup
+Home PC = VPN Server
+Laptop = VPN client
+
+-------------------------------------
+
