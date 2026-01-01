@@ -1,0 +1,168 @@
+
+🧱 PHASE 1 — Local Virtualization (Week 1)
+Tools
+
+VirtualBox (free)
+
+Ubuntu Server ISO
+
+Tasks
+
+Create 2 VMs
+
+VM1: Web Server
+
+VM2: Database Server
+
+Network mode: NAT + Host-only
+
+SSH between VMs
+
+Install:
+
+sudo apt install nginx mysql-server ufw -y
+
+Skills
+
+✔ Virtualization
+✔ Linux admin
+✔ Internal networking
+
+
+------------------------------------------------------------------
+
+What I did:
+
+Installed VirtualBox on Linux Mint
+
+Created two VMs:
+
+web-vm → Web Server
+
+db-vm → Database Server
+
+Installed Ubuntu Server on both VMs
+
+Configured network adapters:
+
+Adapter 1 → NAT (internet)
+
+Adapter 2 → Host-only (vboxnet0) for private subnet
+
+Brought up host-only interfaces and assigned IPs:
+
+web-vm → 192.168.56.101
+
+db-vm → 192.168.56.102
+
+Installed SSH server on db-vm
+
+Verified ping connectivity between web-vm ↔ db-vm
+
+Installed MySQL server on db-vm
+
+Installed MySQL client on web-vm
+
+Created MySQL user webuser bound to web-vm IP
+
+Created MySQL database webdb
+
+Verified SSH and MySQL connectivity from web-vm to db-vm
+
+What problems I faced:
+
+VirtualBox AMD-V error:
+
+Could not enable AMD-V (KVM conflict)
+
+Second network adapter (enp0s8) not appearing
+
+Could not assign host-only IP
+
+SSH from web-vm to db-vm not working initially
+
+MySQL remote connection errors
+
+111 Connection refused
+
+1045 Authentication error
+
+1049 Unknown database
+
+No MySQL client installed on web-vm
+
+What I did to fix that problem:
+
+AMD-V / KVM conflict
+
+Created /etc/modprobe.d/blacklist-kvm.conf with:
+
+	blacklist kvm_amd
+	blacklist kvm
+
+
+Ran sudo update-initramfs -u and rebooted
+
+Second network adapter not detected
+
+Ensured Adapter 2 was enabled in VirtualBox settings
+
+Brought up interface:
+
+	sudo ip link set enp0s8 up
+	sudo dhclient enp0s8
+
+
+SSH issues
+
+Installed SSH server on db-vm:
+
+	sudo apt install openssh-server -y
+	sudo systemctl enable ssh
+	sudo systemctl start ssh
+
+
+SSH from web-vm then worked:
+
+	ssh ubuntu@192.168.56.102
+
+
+MySQL connection errors
+
+Verified MySQL was listening on all interfaces (0.0.0.0:3306)
+
+Installed MySQL client on web-vm:
+
+	sudo apt install mysql-client -y
+
+
+Ensured webuser@192.168.56.101 existed and used mysql_native_password plugin
+
+Created database webdb and granted privileges:
+
+	CREATE DATABASE webdb;
+	GRANT ALL PRIVILEGES ON webdb.* TO 'webuser'@'192.168.56.101';
+	FLUSH PRIVILEGES;
+
+
+Unknown database error
+
+Connected without specifying a database first
+
+Created webdb as the proper database for web-vm
+
+Overall achievement:
+
+Successfully set up a two-tier VM environment simulating a cloud architecture:
+
+Web tier (web-vm)
+
+Database tier (db-vm)
+
+Established private network (host-only) for inter-VM communication
+
+Verified SSH and MySQL connectivity
+
+Practiced real-world troubleshooting skills: KVM conflicts, network setup, MySQL auth, client installation
+
+Built a mini cloud lab environment suitable for future exercises like connecting Nginx → MySQL or simulating AWS EC2 + RDS
